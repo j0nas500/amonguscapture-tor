@@ -34,7 +34,13 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.NeonGreen, new SolidColorBrush(Color.FromRgb(51, 255, 119)) },
             { PlayerColor.HotPink, new SolidColorBrush(Color.FromRgb(255, 51, 102)) },
             { PlayerColor.Gray, new SolidColorBrush(Color.FromRgb(147, 147, 147)) },
-            { PlayerColor.Petrol, new SolidColorBrush(Color.FromRgb(0, 99, 105)) }
+            { PlayerColor.Petrol, new SolidColorBrush(Color.FromRgb(0, 99, 105)) },
+			{ PlayerColor.Panda, new SolidColorBrush(Color.FromRgb(255, 255, 255)) },
+			{ PlayerColor.Midnight, new SolidColorBrush(Color.FromRgb(64, 8, 71)) },
+			{ PlayerColor.Electric, new SolidColorBrush(Color.FromArgb(0xDB, 0xFD, 0x2F, 0)) },
+			{ PlayerColor.SignalOrange, new SolidColorBrush(Color.FromArgb(0xF7, 0x44, 0x17, 0)) },
+			{ PlayerColor.NavyBlue, new SolidColorBrush(Color.FromArgb(0x35, 0x7B, 0x9E, 0)) },
+			{ PlayerColor.Eisbison, new SolidColorBrush(Color.FromArgb(0xA8, 0xDF, 0xFF, 0)) }
 
         };
 
@@ -86,7 +92,13 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.NeonGreen, new SolidColorBrush(Color.FromRgb(0, 234, 77)) },
             { PlayerColor.HotPink, new SolidColorBrush(Color.FromRgb(232, 0, 58)) },
             { PlayerColor.Gray, new SolidColorBrush(Color.FromRgb(120, 120, 120)) },
-            { PlayerColor.Petrol, new SolidColorBrush(Color.FromRgb(0, 61, 54)) }
+            { PlayerColor.Petrol, new SolidColorBrush(Color.FromRgb(0, 61, 54)) },
+			{ PlayerColor.Panda, new SolidColorBrush(Color.FromRgb(12, 12, 12)) },
+			{ PlayerColor.Midnight, new SolidColorBrush(Color.FromRgb(24, 32, 116)) },
+			{ PlayerColor.Electric, new SolidColorBrush(Color.FromArgb(0x89, 0x9E, 0x1E, 0)) },
+			{ PlayerColor.SignalOrange, new SolidColorBrush(Color.FromArgb(0x9B, 0x2E, 0x0F, 0)) },
+			{ PlayerColor.NavyBlue, new SolidColorBrush(Color.FromArgb(0x16, 0x2B, 0x62, 0)) },
+			{ PlayerColor.Eisbison, new SolidColorBrush(Color.FromArgb(0x59, 0x9F, 0xC8, 0)) }
 
         };
 
