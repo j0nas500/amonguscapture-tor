@@ -508,7 +508,13 @@ namespace AmongUsCapture {
         NeonGreen = 20,
         HotPink = 21,
         Gray = 22,
-        Petrol = 23
+        Petrol = 23,
+		Panda = 24,
+		Midnight = 25,
+		Electric = 26,
+		SignalOrange = 27,
+		NavyBlue = 28,
+		Eisbison = 29
     }
 
     public enum PlayRegion {
