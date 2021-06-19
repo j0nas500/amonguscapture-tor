@@ -30,6 +30,7 @@ namespace AUCapture_WPF
     {
         public static readonly ClientSocket socket = new ClientSocket();
         public static readonly DiscordHandler handler = new DiscordHandler();
+        public static readonly DiscordHandler handler = new DiscordHandler();
         private IAppSettings config;
         public static string LogFolder = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmongUsCapture", "logs");
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();

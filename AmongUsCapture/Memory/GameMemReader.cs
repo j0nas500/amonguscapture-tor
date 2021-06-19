@@ -26,11 +26,11 @@ namespace AmongUsCapture {
 
         private LobbyEventArgs latestLobbyEventArgs;
 
-        private Dictionary<string, PlayerInfo> newPlayerInfos = new(10); // container for new player infos. Also has capacity 10 already assigned so no internal resizing of the data structure is needed
+        private Dictionary<string, PlayerInfo> newPlayerInfos = new(15); // container for new player infos. Also has capacity 15 already assigned so no internal resizing of the data structure is needed
 
         public OffsetManager offMan = new(Settings.PersistentSettings.IndexURL);
 
-        private Dictionary<string, PlayerInfo> oldPlayerInfos = new(10); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
+        private Dictionary<string, PlayerInfo> oldPlayerInfos = new(15); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
 
         private GameState oldState = GameState.UNKNOWN;
         private int prevChatBubsVersion;
@@ -497,7 +497,7 @@ namespace AmongUsCapture {
         Brown = 9,
         Cyan = 10,
         Lime = 11,
-        Skincolor = 12,
+        Salmon = 12,
         Bordeaux = 13,
         Olive = 14,
         Turqoise = 15,
@@ -505,16 +505,21 @@ namespace AmongUsCapture {
         Lavender = 17,
         Nougat = 18,
         Peach = 19,
-        NeonGreen = 20,
+        Wasabi = 20,
         HotPink = 21,
-        Gray = 22,
-        Petrol = 23,
-		Panda = 24,
-		Midnight = 25,
-		Electric = 26,
-		SignalOrange = 27,
-		NavyBlue = 28,
-		Eisbison = 29
+        Petrol = 22,
+        Lemon = 23,
+		SignalOrange = 24,
+		Teal = 25,
+		Blurple = 26,
+		Sunrise = 27,
+		Ice = 28,
+        Maroon = 29,
+        Rose = 30,
+        Banana = 31,
+        Gray = 32,
+        Tan = 33,
+        Sunset = 34
     }
 
     public enum PlayRegion {
