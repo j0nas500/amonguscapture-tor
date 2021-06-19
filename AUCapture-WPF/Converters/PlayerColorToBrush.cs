@@ -99,9 +99,9 @@ namespace AUCapture_WPF.Converters
 			{ PlayerColor.Lemon, new SolidColorBrush(Color.FromArgb(0x74, 0xE5, 0x10, 0)) },
 			{ PlayerColor.SignalOrange, new SolidColorBrush(Color.FromArgb(0x9B, 0x2E, 0x0F, 0)) },
 			{ PlayerColor.Teal, new SolidColorBrush(Color.FromArgb(0x12, 0x89, 0x86, 0)) },
-			{ PlayerColor.Blurple, new SolidColorBrush(Color.FromArgb(0x29, 0x17, 0x96, 0)) }
-            { PlayerColor.Sunrise, new SolidColorBrush(Color.FromArgb(0xDB, 0x44, 0x42, 0)) }
-            { PlayerColor.Ice, new SolidColorBrush(Color.FromArgb(0x59, 0x9F, 0xC8, 0)) }
+			{ PlayerColor.Blurple, new SolidColorBrush(Color.FromArgb(0x29, 0x17, 0x96, 0)) },
+            { PlayerColor.Sunrise, new SolidColorBrush(Color.FromArgb(0xDB, 0x44, 0x42, 0)) },
+            { PlayerColor.Ice, new SolidColorBrush(Color.FromArgb(0x59, 0x9F, 0xC8, 0)) },
             { PlayerColor.Lime,    new SolidColorBrush(Color.FromRgb(80, 239, 57))},
             { PlayerColor.Maroon,  new SolidColorBrush(Color.FromRgb(95, 29, 46))},
             { PlayerColor.Rose,    new SolidColorBrush(Color.FromRgb(236, 192, 211))},
