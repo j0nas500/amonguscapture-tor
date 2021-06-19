@@ -22,8 +22,7 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Purple,  new SolidColorBrush(Color.FromRgb(107, 47, 187))},
             { PlayerColor.Brown,   new SolidColorBrush(Color.FromRgb(113, 73, 30))},
             { PlayerColor.Cyan,    new SolidColorBrush(Color.FromRgb(56, 254, 220))},
-            { PlayerColor.Lime,     new SolidColorBrush(Color.FromRgb(80, 239, 57))},
-            { PlayerColor.Skincolor, new SolidColorBrush(Color.FromRgb(239, 191, 192)) },
+            { PlayerColor.Salmon, new SolidColorBrush(Color.FromRgb(239, 191, 192))},
             { PlayerColor.Bordeaux, new SolidColorBrush(Color.FromRgb(109, 7, 26)) },
             { PlayerColor.Olive, new SolidColorBrush(Color.FromRgb(154, 140, 61)) },
             { PlayerColor.Turqoise, new SolidColorBrush(Color.FromRgb(22, 132, 176)) },
@@ -31,16 +30,22 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Lavender, new SolidColorBrush(Color.FromRgb(173, 126, 201)) },
             { PlayerColor.Nougat, new SolidColorBrush(Color.FromRgb(160, 101, 56)) },
             { PlayerColor.Peach, new SolidColorBrush(Color.FromRgb(255, 164, 119)) },
-            { PlayerColor.NeonGreen, new SolidColorBrush(Color.FromRgb(51, 255, 119)) },
+            { PlayerColor.Wasabi, new SolidColorBrush(Color.FromRgb(112, 143, 46)) },
             { PlayerColor.HotPink, new SolidColorBrush(Color.FromRgb(255, 51, 102)) },
-            { PlayerColor.Gray, new SolidColorBrush(Color.FromRgb(147, 147, 147)) },
             { PlayerColor.Petrol, new SolidColorBrush(Color.FromRgb(0, 99, 105)) },
-			{ PlayerColor.Panda, new SolidColorBrush(Color.FromRgb(255, 255, 255)) },
-			{ PlayerColor.Midnight, new SolidColorBrush(Color.FromRgb(64, 8, 71)) },
-			{ PlayerColor.Electric, new SolidColorBrush(Color.FromArgb(0xDB, 0xFD, 0x2F, 0)) },
+            { PlayerColor.Lemon, new SolidColorBrush(Color.FromArgb(0xDB, 0xFD, 0x2F, 0)) },
 			{ PlayerColor.SignalOrange, new SolidColorBrush(Color.FromArgb(0xF7, 0x44, 0x17, 0)) },
-			{ PlayerColor.NavyBlue, new SolidColorBrush(Color.FromArgb(0x35, 0x7B, 0x9E, 0)) },
-			{ PlayerColor.Eisbison, new SolidColorBrush(Color.FromArgb(0xA8, 0xDF, 0xFF, 0)) }
+            { PlayerColor.Teal, new SolidColorBrush(Color.FromArgb(0x25, 0xB8, 0xBF, 0)) },
+			{ PlayerColor.Blurple, new SolidColorBrush(Color.FromArgb(0x59, 0x3C, 0xD6, 0)) },
+			{ PlayerColor.Sunrise, new SolidColorBrush(Color.FromArgb(0xFF, 0xCA, 0x19, 0)) },
+			{ PlayerColor.Ice, new SolidColorBrush(Color.FromArgb(0xA8, 0xDF, 0xFF, 0)) },
+            { PlayerColor.Lime,    new SolidColorBrush(Color.FromRgb(80, 239, 57))},
+            { PlayerColor.Maroon,  new SolidColorBrush(Color.FromRgb(95, 29, 46))},
+            { PlayerColor.Rose,    new SolidColorBrush(Color.FromRgb(236, 192, 211))},
+            { PlayerColor.Banana,  new SolidColorBrush(Color.FromRgb(240, 231, 168))},
+            { PlayerColor.Gray,    new SolidColorBrush(Color.FromRgb(117, 133, 147))},
+            { PlayerColor.Tan,     new SolidColorBrush(Color.FromRgb(145, 136, 119))},
+            { PlayerColor.Sunset,  new SolidColorBrush(Color.FromRgb(215, 100, 100))}
 
         };
 
@@ -80,8 +85,7 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Purple,  new SolidColorBrush(Color.FromRgb(107, 47, 187))},
             { PlayerColor.Brown,   new SolidColorBrush(Color.FromRgb(113, 73, 30))},
             { PlayerColor.Cyan,    new SolidColorBrush(Color.FromRgb(56, 254, 220))},
-            { PlayerColor.Lime,     new SolidColorBrush(Color.FromRgb(80, 239, 57))},
-            { PlayerColor.Skincolor, new SolidColorBrush(Color.FromRgb(182, 119, 114)) },
+            { PlayerColor.Salmon, new SolidColorBrush(Color.FromRgb(182, 119, 114)) },
             { PlayerColor.Bordeaux, new SolidColorBrush(Color.FromRgb(54, 2, 11)) },
             { PlayerColor.Olive, new SolidColorBrush(Color.FromRgb(104, 95, 40)) },
             { PlayerColor.Turqoise, new SolidColorBrush(Color.FromRgb(15, 89, 117)) },
@@ -89,16 +93,22 @@ namespace AUCapture_WPF.Converters
             { PlayerColor.Lavender, new SolidColorBrush(Color.FromRgb(131, 58, 203)) },
             { PlayerColor.Nougat, new SolidColorBrush(Color.FromRgb(115, 15, 78)) },
             { PlayerColor.Peach, new SolidColorBrush(Color.FromRgb(238, 128, 100)) },
-            { PlayerColor.NeonGreen, new SolidColorBrush(Color.FromRgb(0, 234, 77)) },
+            { PlayerColor.Wasabi, new SolidColorBrush(Color.FromRgb(72, 92, 29)) },
             { PlayerColor.HotPink, new SolidColorBrush(Color.FromRgb(232, 0, 58)) },
-            { PlayerColor.Gray, new SolidColorBrush(Color.FromRgb(120, 120, 120)) },
             { PlayerColor.Petrol, new SolidColorBrush(Color.FromRgb(0, 61, 54)) },
-			{ PlayerColor.Panda, new SolidColorBrush(Color.FromRgb(12, 12, 12)) },
-			{ PlayerColor.Midnight, new SolidColorBrush(Color.FromRgb(24, 32, 116)) },
-			{ PlayerColor.Electric, new SolidColorBrush(Color.FromArgb(0x89, 0x9E, 0x1E, 0)) },
+			{ PlayerColor.Lemon, new SolidColorBrush(Color.FromArgb(0x74, 0xE5, 0x10, 0)) },
 			{ PlayerColor.SignalOrange, new SolidColorBrush(Color.FromArgb(0x9B, 0x2E, 0x0F, 0)) },
-			{ PlayerColor.NavyBlue, new SolidColorBrush(Color.FromArgb(0x16, 0x2B, 0x62, 0)) },
-			{ PlayerColor.Eisbison, new SolidColorBrush(Color.FromArgb(0x59, 0x9F, 0xC8, 0)) }
+			{ PlayerColor.Teal, new SolidColorBrush(Color.FromArgb(0x12, 0x89, 0x86, 0)) },
+			{ PlayerColor.Blurple, new SolidColorBrush(Color.FromArgb(0x29, 0x17, 0x96, 0)) }
+            { PlayerColor.Sunrise, new SolidColorBrush(Color.FromArgb(0xDB, 0x44, 0x42, 0)) }
+            { PlayerColor.Ice, new SolidColorBrush(Color.FromArgb(0x59, 0x9F, 0xC8, 0)) }
+            { PlayerColor.Lime,    new SolidColorBrush(Color.FromRgb(80, 239, 57))},
+            { PlayerColor.Maroon,  new SolidColorBrush(Color.FromRgb(95, 29, 46))},
+            { PlayerColor.Rose,    new SolidColorBrush(Color.FromRgb(236, 192, 211))},
+            { PlayerColor.Banana,  new SolidColorBrush(Color.FromRgb(240, 231, 168))},
+            { PlayerColor.Gray,    new SolidColorBrush(Color.FromRgb(117, 133, 147))},
+            { PlayerColor.Tan,     new SolidColorBrush(Color.FromRgb(145, 136, 119))},
+            { PlayerColor.Sunset,  new SolidColorBrush(Color.FromRgb(215, 100, 100))}
 
         };
 

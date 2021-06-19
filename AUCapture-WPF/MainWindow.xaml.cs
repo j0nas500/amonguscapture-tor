@@ -554,6 +554,24 @@ namespace AUCapture_WPF {
                 case PlayerColor.Lime:
                     OutputCode = Color.Lime;
                     break;
+                case PlayerColor.Maroon:
+                    OutputCode = Color.Maroon;
+                    break;
+                case PlayerColor.Rose:
+                    OutputCode = Color.MistyRose;
+                    break;
+                case PlayerColor.Banana:
+                    OutputCode = Color.LemonChiffon;
+                    break;
+                case PlayerColor.Gray:
+                    OutputCode = Color.Gray;
+                    break;
+                case PlayerColor.Tan:
+                    OutputCode = Color.Tan;
+                    break;
+                case PlayerColor.Sunset:
+                    OutputCode = Color.LightCoral;
+                    break;
             }
 
             return OutputCode;
@@ -677,7 +695,7 @@ namespace AUCapture_WPF {
         private void TestUsers() {
             context.Connected = true;
             context.GameState = GameState.TASKS;
-            var numOfPlayers = 9;
+            var numOfPlayers = 14;
             for (uint i = 0; i < numOfPlayers; i++) context.Players.Add(new Player($"{i}Cool4u", (PlayerColor) (i % 12), true, i % 10, i, 0));
 
             RandomizePlayers();
