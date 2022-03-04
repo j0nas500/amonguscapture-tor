@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>AUCapture_GTK</RootNamespace>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AmongUsCapture\AmongUsCapture.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GtkSharp" Version="3.24.24.34" />
+      <PackageReference Include="Mono.Unix" Version="7.1.0-final.1.21458.1" />
+      <PackageReference Include="NLog" Version="5.0.0-rc2" />
+      <PackageReference Include="Tmds.DBus" Version="0.10.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="../AUCapture-WPF/Icon.ico">
+            <LogicalName>aucapture.icon</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="master.txt">
+            <LogicalName>master-version.res</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="contributors.txt">
+            <LogicalName>contributors.res</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="version.txt" Condition="$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))">
+            <LogicalName>version.res</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="MainGTKWindow.resx">
+        <DependentUpon>MainGTKWindow.cs</DependentUpon>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="MainGTKWindow.Gtk.cs">
+        <DependentUpon>MainGTKWindow.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

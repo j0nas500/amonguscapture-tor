@@ -271,7 +271,8 @@ namespace AmongUsCapture {
                                     Logger.Info("Client verification: {$status}", "PASS");
                                 }
 
-                                try {
+                                try
+                                {
                                     GameHash = GetSha256Hash(module.FileName);
                                     Logger.Info("GameAssembly sha256: {GameHash}", GameHash);
                                 }
