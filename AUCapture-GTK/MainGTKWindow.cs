@@ -101,8 +101,9 @@ namespace AmongUsCapture_GTK
         {
             //builder.Autoconnect(this);
             SetupLogger();
-            Icon = new Pixbuf(Assembly.GetExecutingAssembly().GetManifestResourceStream("aucapture.icon"));
+            Icon = new Pixbuf(Assembly.GetExecutingAssembly().GetManifestResourceStream("auc-app.icon"));
             clientSocket = sock;
+            clientSocket.Init();
             InitializeWindow();
             GameMemReader.getInstance().GameVersionUnverified += _eventGameIsUnverified;
             GameMemReader.getInstance().GameStateChanged += _eventGameStateChanged;
@@ -287,7 +288,7 @@ namespace AmongUsCapture_GTK
 
         private void _primaryWindowMenuItemAbout_Activated(object o, EventArgs e)
         {
-            var abouticon = new Pixbuf(Assembly.GetExecutingAssembly().GetManifestResourceStream("aucapture.icon"));
+            var abouticon = new Pixbuf(Assembly.GetExecutingAssembly().GetManifestResourceStream("auc-about.icon"));
             string version = String.Empty;
             string master = String.Empty;
             string license = String.Empty;
@@ -336,8 +337,9 @@ namespace AmongUsCapture_GTK
                 Icon = abouticon,
                 Version = version,
                 Authors = contributorlist.ToArray(),
-                Comments = "Capture of the local Among Us executable state, cross-platform rewrite in GTK." +
-                $"\n\nBased on amonguscapture {master}",
+                Comments = "GTK UI for AmongUsCapture (https://github.com/automuteus/amonguscapture)\n\n" +
+                           "AmongUsCapture reads game data of Among Us and communicates with Galactus.\n\n" +
+                           $"Based on Upstream Release: {master}",
                 Website = "https://github.com/TauAkiou/amonguscapture-gtk",
                 Logo = abouticon
             };

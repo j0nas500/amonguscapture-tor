@@ -1,8 +1,8 @@
-TauAkiou(https://github.com/TauAkiou) - GTK UI Design, Linux Porting
-varedz(https://github.com/varedz) - Code
-Aiden(https://wolfhound.xyz) - Design, Ideas, Planning & Feedback
-CarbonNeuron(https://github.com/CarbonNeuron) - Code
-ph0t0shop(https://github.com/ph0t0shop) - Code, Ideas, Planning & Feedback
-Denver Quane(http://automute.us) - Ideas, Planning & Feedback, Infrastructure, Maintenance
-Aspen-Cyborg(https://github.com/Aspen-Cyborg) - Design, Content
-mtaku3(https://github.com/mtaku3 - Data
+TauAkiou https://github.com/TauAkiou - GTK UI Design, Linux Porting
+varedz https://github.com/varedz - Code
+Aiden https://wolfhound.xyz - Design, Ideas, Planning & Feedback
+CarbonNeuron https://github.com/CarbonNeuron - Code
+ph0t0shop https://github.com/ph0t0shop - Code, Ideas, Planning & Feedback
+Denver Quane http://automute.us - Ideas, Planning &amp Feedback, Infrastructure, Maintenance
+Aspen-Cyborg https://github.com/Aspen-Cyborg - Design, Content
+mtaku3 https://github.com/mtaku3 - Data
