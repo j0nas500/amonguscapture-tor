@@ -6,7 +6,7 @@ using Color = System.Drawing.Color;
 
 namespace AmongUsCapture.TextColorLibrary
 {
-    public static class TextColor
+    public static class PangoColor
     {
         private static char colorIndicator = '§'; //Represent color codes as §FFFFFF (6 Letters, Hex decode)
 

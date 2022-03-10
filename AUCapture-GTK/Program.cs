@@ -36,13 +36,13 @@ namespace AmongUsCapture_GTK
         [STAThread]
         private static void Main(string[] args)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && Settings.PersistentSettings.debugConsole)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows) && AmongUsCapture.Settings.PersistentSettings.debugConsole)
                 AllocConsole(); // needs to be the first call in the program to prevent weird bugs
           
-            if (!Directory.Exists(Settings.StorageLocation))
+            if (!Directory.Exists(AmongUsCapture.Settings.StorageLocation))
             {
                 // Create Settings directory if it doesn't exist, as we need to stick our pidfile there.
-                Directory.CreateDirectory(Settings.StorageLocation);
+                Directory.CreateDirectory(AmongUsCapture.Settings.StorageLocation);
             }
             
             URIStartResult uriRes = URIStartResult.CLOSE;
@@ -67,7 +67,7 @@ namespace AmongUsCapture_GTK
             var thread = new Thread(OpenGUI);
             if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
-            while (Settings.conInterface is null) Thread.Sleep(250);
+            while (GtkSettings.conInterface is null) Thread.Sleep(250);
             Task.Factory.StartNew(() => socket.Init())
                 .Wait(); // run socket in background. Important to wait for init to have actually finished before continuing
             Task.Factory.StartNew(() => IPCAdapter.getInstance().RegisterMinion()).Wait();
@@ -94,8 +94,7 @@ namespace AmongUsCapture_GTK
             Application.Init();
             window = new MainGTKWindow(socket);
             appstate.AddWindow(window);
-            Settings.form = window;
-            Settings.conInterface = new FormConsole(window);
+            GtkSettings.conInterface = new FormConsole(window);
             
             window.DeleteEvent += (object o, DeleteEventArgs e) =>
             {

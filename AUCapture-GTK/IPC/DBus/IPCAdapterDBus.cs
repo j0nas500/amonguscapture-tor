@@ -39,14 +39,14 @@ namespace AmongUsCapture_GTK.IPC.DBus
             var wasURIStart = args.Length > 0 && args[0].StartsWith(UriScheme + "://");
             var result = URIStartResult.CONTINUE;
 
-            if (!File.Exists(Path.Join(Settings.StorageLocation, ".amonguscapture.pid")))
+            if (!File.Exists(Path.Join(AmongUsCapture.Settings.StorageLocation, ".amonguscapture.pid")))
             {
                 _isHostInstance = true;
             }
             else
             {
                 // Open our PID file.
-                using (var pidfile = File.OpenText(Path.Join(Settings.StorageLocation, ".amonguscapture.pid")))
+                using (var pidfile = File.OpenText(Path.Join(AmongUsCapture.Settings.StorageLocation, ".amonguscapture.pid")))
                 {
                     var pid = pidfile.ReadLine();
                     if (pid != null)
@@ -76,7 +76,7 @@ namespace AmongUsCapture_GTK.IPC.DBus
                         {
                             // Process doesn't exist. Clear the file.
                             Console.WriteLine($"Found stale PID file containing {pid}.");
-                            File.Delete(Path.Join(Settings.StorageLocation, ".amonguscapture.pid"));
+                            File.Delete(Path.Join(AmongUsCapture.Settings.StorageLocation, ".amonguscapture.pid"));
                             _isHostInstance = true;
                         }
                     }
@@ -86,7 +86,7 @@ namespace AmongUsCapture_GTK.IPC.DBus
 
             if (_isHostInstance)
             {
-                using (var pidwriter = File.CreateText(Path.Join(Settings.StorageLocation, ".amonguscapture.pid")))
+                using (var pidwriter = File.CreateText(Path.Join(AmongUsCapture.Settings.StorageLocation, ".amonguscapture.pid")))
                 {
                     pidwriter.Write(myProcessId);
                 }
@@ -281,13 +281,13 @@ namespace AmongUsCapture_GTK.IPC.DBus
         private Task CleanPid()
         {
             // Make sure the pidfile is cleaned up if we have one.
-            var pidfile = Path.Join(Settings.StorageLocation, ".amonguscapture.pid");
+            var pidfile = Path.Join(AmongUsCapture.Settings.StorageLocation, ".amonguscapture.pid");
 
             if (File.Exists(pidfile))
             {
                 int pid;
                 bool fileread;
-                using (var pidread = File.OpenText(Path.Join(Settings.StorageLocation, ".amonguscapture.pid")))
+                using (var pidread = File.OpenText(Path.Join(AmongUsCapture.Settings.StorageLocation, ".amonguscapture.pid")))
                 {
                     fileread = Int32.TryParse(pidread.ReadLine(), out pid);
                 }
@@ -310,7 +310,7 @@ namespace AmongUsCapture_GTK.IPC.DBus
 
         private void RespondToDbus(string signalresponse)
         {
-            Settings.conInterface.WriteModuleTextColored("DBus", Color.Silver,
+            GtkSettings.conInterface.WriteModuleTextColored("DBus", Color.Silver,
                 $"Received DBus Method Call: \"{signalresponse}\"");
             
             var token = StartToken.FromString(signalresponse);

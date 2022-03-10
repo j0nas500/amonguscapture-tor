@@ -18,12 +18,13 @@ using AmongUsCapture.TextColorLibrary;
 using AmongUsCapture_GTK.IPC;
 using AUCapture_GTK.IPC;
 using AmongUsCapture;
-using Castle.Core.Internal;
+using AUCapture_GTK.ConsoleTypes;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
 using Process = System.Diagnostics.Process;
 using Target = Gtk.Target;
+using Microsoft.Win32; // We need registry shit from this.
 
 namespace AmongUsCapture_GTK
 {
@@ -58,14 +59,13 @@ namespace AmongUsCapture_GTK
                 Header = $"Capture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}\n",
                 Footer = $"\nCapture version: {v.FileMajorPart}.{v.FileMinorPart}.{v.FileBuildPart}.{v.FilePrivatePart}"
             };
-            var logconsole = new MethodCallTarget("logconsole")
+            var logconsole = new NlogGTKConsoleTarget()
             {
-                ClassName = typeof(MainGTKWindow).AssemblyQualifiedName,
-                MethodName = "WriteLineToConsole"
-            };
-            logconsole.Parameters.Add(new MethodCallParameter("${level}"));
-            logconsole.Parameters.Add(new MethodCallParameter("${message}"));
+                MainWindow = this,
+                
+                Layout = "${date:format=yyyy-MM-dd HH\\:mm\\:ss} - ${logger:shortName=true} | [${level:uppercase=true}]: ${message}",
 
+            };
             
             LoggingConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
             LoggingConfig.AddRule(LogLevel.Debug, LogLevel.Fatal, logconsole);
@@ -74,29 +74,6 @@ namespace AmongUsCapture_GTK
             NLog.LogManager.Configuration = LoggingConfig;
         }
         
-        private Color Rainbow(float progress)
-        {
-            var div = Math.Abs(progress % 1) * 6;
-            var ascending = (int) (div % 1 * 255);
-            var descending = 255 - ascending;
-
-            switch ((int) div)
-            {
-                case 0:
-                    return Color.FromArgb(255, 255, ascending, 0);
-                case 1:
-                    return Color.FromArgb(255, descending, 255, 0);
-                case 2:
-                    return Color.FromArgb(255, 0, 255, ascending);
-                case 3:
-                    return Color.FromArgb(255, 0, descending, 255);
-                case 4:
-                    return Color.FromArgb(255, ascending, 0, 255);
-                default: // case 5:
-                    return Color.FromArgb(255, 255, 0, descending);
-            }
-        }
-      
         public MainGTKWindow(ClientSocket sock) : base("Among Us Capture - GTK")
         {
             //builder.Autoconnect(this);
@@ -111,7 +88,7 @@ namespace AmongUsCapture_GTK
             GameMemReader.getInstance().ChatMessageAdded += _eventChatMessageAdded;
 
             // Load URL
-            _urlHostEntryField.Text = Settings.PersistentSettings.host;
+            _urlHostEntryField.Text = AmongUsCapture.Settings.PersistentSettings.host;
 
             // Connect on Enter
             //this.AcceptButton = ConnectButton;
@@ -124,7 +101,7 @@ namespace AmongUsCapture_GTK
                 "applications");
             var xdg_file = System.IO.Path.Join(xdg_path, "aucapture-opener.desktop");
 
-            var skippingHandler = Settings.PersistentSettings.skipHandlerInstall;
+            var skippingHandler = GtkSettings.PersistentSettings.skipHandlerInstall;
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
@@ -191,7 +168,7 @@ namespace AmongUsCapture_GTK
             });
 
 
-            Settings.conInterface.WriteModuleTextColored("Notification", Color.Red,
+            GtkSettings.conInterface.WriteModuleTextColored("Notification", Color.Red,
                 $"We have detected an unverified version of Among Us. Things may not work properly.");
         }
 
@@ -212,18 +189,22 @@ namespace AmongUsCapture_GTK
                     false,
                     String.Empty);
                 
-                if(!File.Exists(xdg_file) && !Settings.PersistentSettings.skipHandlerInstall)
+                if(!File.Exists(xdg_file) && !GtkSettings.PersistentSettings.skipHandlerInstall)
                 {
                     info +=
-                        "Would you like to enable support for AutoMuteUs one-click connection?" +
-                        "This will allow you to use the links provided by AutoMuteUs to connect the capture to the bot automatically.\n\n" +
+                        "Would you like to enable capture bot URI support?" +
+                        "This will allow you to use the links provided by the AutoMuteUs bot to connect the capture automatically.\n\n" +
                         "The following operations will be performed:\n\n" +
+                    #if _WINDOWS
+                        $"- 'aucapture:' links will be handled by this application, located at: {System.Reflection.Assembly.GetExecutingAssembly().CodeBase}" +
+                    #else
                         $"- The following .desktop file will be installed: {xdg_file}\n\n" +
                         "- The following command will be run to link the 'aucapture:' URI to the program:\n\n \'xdg-mime default aucapture-opener.desktop x-scheme-handler/aucapture\'" +
+                    #endif
                         "\n\nIf you decline, Discord connection links will not be functional." +
                         "\n\nYou can install or manage One-Click support by using the \"One-Click Connection Management\" link in the File menu.";
 
-                    InstallLinkDialogBox.Text = info;
+                        InstallLinkDialogBox.Text = info;
                     InstallLinkDialogBox.Title = "Enable One-Click Connection?";
                     InstallLinkDialogBox.AddButton("Cancel", ResponseType.Reject);
                     InstallLinkDialogBox.AddButton("Install", ResponseType.Accept);
@@ -233,7 +214,7 @@ namespace AmongUsCapture_GTK
                         if (responseArgs.ResponseId == ResponseType.Reject)
                         {
                             // Make sure we have the setting to ignore the dialog box set.
-                            Settings.PersistentSettings.skipHandlerInstall = true;
+                            GtkSettings.PersistentSettings.skipHandlerInstall = true;
                         }
 
                         if (responseArgs.ResponseId == ResponseType.Accept)
@@ -244,18 +225,25 @@ namespace AmongUsCapture_GTK
                 }
                 else
                 {
-                    info += "This menu manages the One-Click Connection link system.\n\n";
+                    info += "This menu manages the aucapture link handler.\n\n";
                     
-                    info += "One-Click Connection Status: ";
-                    if (File.Exists(xdg_file)) info += "Enabled\n\n";
-                    else info += "Disabled\n\n";
 
-                    info += $"Runner (.desktop) Installation Path: ";
-                    if (File.Exists(xdg_file)) info += xdg_file;
-                    else info += "Not Found";
+                    #if _WINDOWS
+                        info += "Capture Handler Status: ";
+                        // Complete Windows handling here.
 
-                    InstallLinkDialogBox.Text += info;
-                    InstallLinkDialogBox.Title = "Manage One-Click Connection";
+                    #else
+                        info += "Capture Handler Status: ";
+                        if (File.Exists(xdg_file)) info += "Enabled\n\n";
+                        else info += "Disabled\n\n";
+                        
+                        info += $"Runner (.desktop) Installation Path: ";
+                        if (File.Exists(xdg_file)) info += xdg_file;
+                        else info += "Not Found";
+                    #endif                        
+                        
+                        InstallLinkDialogBox.Text += info;
+                    InstallLinkDialogBox.Title = "Manage AUCapture URI Handler";
                     InstallLinkDialogBox.AddButton("Cancel", ResponseType.Close);
                     InstallLinkDialogBox.AddButton("Uninstall", ResponseType.Reject);
                     InstallLinkDialogBox.AddButton("Reinstall", ResponseType.Accept);
@@ -391,19 +379,10 @@ namespace AmongUsCapture_GTK
         {
             //TestFillConsole(1000);
         }
-
-        private string getRainbowText(string nonRainbow, int shift = 0)
-        {
-            var OutputString = "";
-            for (var i = 0; i < nonRainbow.Length; i++)
-                OutputString += Rainbow((float) ((i + shift) % nonRainbow.Length) / nonRainbow.Length).ToTextColor() +
-                                nonRainbow[i];
-            return OutputString;
-        }
-
+        
         private void _eventChatMessageAdded(object sender, ChatMessageEventArgs e)
         {
-            Settings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
+            GtkSettings.conInterface.WriteModuleTextColored("CHAT", Color.DarkKhaki,
                 $"{PlayerColorToColorOBJ(e.Color).ToTextColorPango(e.Sender)}{e.Message}");
         }
 
@@ -413,7 +392,7 @@ namespace AmongUsCapture_GTK
                 deadMessageQueue.Enqueue(
                     $"{PlayerColorToColorOBJ(e.Color).ToTextColorPango(e.Name)}: {e.Action}");
             else
-                Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
+                GtkSettings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki,
                     $"{PlayerColorToColorOBJ(e.Color).ToTextColorPango(e.Name)}: {e.Action}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, e.Name + ": " + e.Action);
         }
@@ -423,7 +402,7 @@ namespace AmongUsCapture_GTK
             while (deadMessageQueue.Count > 0) //Lets print out the state changes now that gamestate has changed.
             {
                 var text = deadMessageQueue.Dequeue();
-                Settings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, text);
+                GtkSettings.conInterface.WriteModuleTextColored("PlayerChange", Color.DarkKhaki, text);
             }
             
             Idle.Add(delegate
@@ -431,10 +410,10 @@ namespace AmongUsCapture_GTK
                 _currentStateLabel.Text = e.NewState.ToString();
                 return false;
             });
-            Settings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"State changed to {Color.Cyan.ToTextColorPango(e.NewState.ToString())}");
+            GtkSettings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"State changed to {Color.Cyan.ToTextColorPango(e.NewState.ToString())}");
             //Program.conInterface.WriteModuleTextColored("GameMemReader", Color.Green, "State changed to " + e.NewState);
         }
-
+        
         private void _connectCodeSubmitButton_Click(object sender, EventArgs e)
         {
 
@@ -501,19 +480,6 @@ namespace AmongUsCapture_GTK
             
         }
 
-        private void TestFillConsole(int entries) //Helper test method to see if filling console works.
-        {
-            for (var i = 0; i < entries; i++)
-            {
-                var nonString = "Wow! Look at this pretty text!";
-                Settings.conInterface.WriteModuleTextColored("Rainbow", Rainbow((float) i / entries),
-                    getRainbowText(nonString, i));
-            }
-
-            ;
-            //this.WriteColoredText(getRainbowText("This is a Pre-Release from Carbon's branch."));
-        }
-
         public void WriteConsoleLineFormatted(string moduleName, Color moduleColor, string message)
         {
             //Outputs a message like this: [{ModuleName}]: {Message}
@@ -525,7 +491,7 @@ namespace AmongUsCapture_GTK
         {
             lock (locker)
             {
-                foreach (var part in TextColor.toParts(ColoredText))
+                foreach (var part in PangoColor.toParts(ColoredText))
                     AppendColoredTextToConsole(part.text, part.textColor);
                 AppendColoredTextToConsole("", Color.White, true);
             }
@@ -547,8 +513,8 @@ namespace AmongUsCapture_GTK
                 });
             }
         }
-
-        public void WriteLineToConsole(string level, string line)
+        
+        public void AppendNewLineToConsole(string line)
         {
             if (!(_consoleTextView is null))
             {
@@ -556,13 +522,13 @@ namespace AmongUsCapture_GTK
                 {
                     Idle.Add(delegate
                     {
+                        // Let the actual nlog interface handle adding text to the console.
                         var iter = _consoleTextView.Buffer.EndIter;
-                        _consoleTextView.Buffer.Insert(ref iter,$" [{level}] {line} \n");
+                        _consoleTextView.Buffer.Insert(ref iter,$"{line}\n");
                         _consoleTextView.Buffer.PlaceCursor(iter);
                         return false;
                     });
                 }
-
                 //autoscroll();
             }
         }
@@ -613,159 +579,6 @@ namespace AmongUsCapture_GTK
             return OutputCode;
         }
 
-        private string PlayerColorToColorCode(PlayerColor pColor)
-        {
-            //Red = 0,
-            //Blue = 1,
-            //Green = 2,
-            //Pink = 3,
-            //Orange = 4,
-            //Yellow = 5,
-            //Black = 6,
-            //White = 7,
-            //Purple = 8,
-            //Brown = 9,
-            //Cyan = 10,
-            //Lime = 11
-            var OutputCode = "";
-            switch (pColor)
-            {
-                case PlayerColor.Red:
-                    OutputCode = "§c";
-                    break;
-                case PlayerColor.Blue:
-                    OutputCode = "§1";
-                    break;
-                case PlayerColor.Green:
-                    OutputCode = "§2";
-                    break;
-                case PlayerColor.Pink:
-                    OutputCode = "§d";
-                    break;
-                case PlayerColor.Orange:
-                    OutputCode = "§o";
-                    break;
-                case PlayerColor.Yellow:
-                    OutputCode = "§e";
-                    break;
-                case PlayerColor.Black:
-                    OutputCode = "§0";
-                    break;
-                case PlayerColor.White:
-                    OutputCode = "§f";
-                    break;
-                case PlayerColor.Purple:
-                    OutputCode = "§5";
-                    break;
-                case PlayerColor.Brown:
-                    OutputCode = "§n";
-                    break;
-                case PlayerColor.Cyan:
-                    OutputCode = "§b";
-                    break;
-                case PlayerColor.Lime:
-                    OutputCode = "§a";
-                    break;
-            }
-
-            return OutputCode;
-        }
-
-        public void WriteLineFormatted(string str, bool acceptnewlines = true)
-        {
-            if (!(_consoleTextView is null))
-            {
-                Idle.Add(delegate
-                {
-                    lock (locker)
-                    {
-                        if (!string.IsNullOrEmpty(str))
-                        {
-                            if (!acceptnewlines) str = str.Replace('\n', ' ');
-                            var parts = str.Split(new[] {'§'});
-                            if (parts[0].Length > 0) AppendColoredTextToConsole(parts[0], Color.White);
-                            for (var i = 1; i < parts.Length; i++)
-                            {
-                                var charColor = Color.White;
-                                if (parts[i].Length > 0)
-                                {
-                                    switch (parts[i][0])
-                                    {
-                                        case '0':
-                                            charColor = Color.Gray;
-                                            break; //Should be Black but Black is non-readable on a black background
-                                        case '1':
-                                            charColor = Color.RoyalBlue;
-                                            break;
-                                        case '2':
-                                            charColor = Color.Green;
-                                            break;
-                                        case '3':
-                                            charColor = Color.DarkCyan;
-                                            break;
-                                        case '4':
-                                            charColor = Color.DarkRed;
-                                            break;
-                                        case '5':
-                                            charColor = Color.MediumPurple;
-                                            break;
-                                        case '6':
-                                            charColor = Color.DarkKhaki;
-                                            break;
-                                        case '7':
-                                            charColor = Color.Gray;
-                                            break;
-                                        case '8':
-                                            charColor = Color.DarkGray;
-                                            break;
-                                        case '9':
-                                            charColor = Color.LightBlue;
-                                            break;
-                                        case 'a':
-                                            charColor = Color.Lime;
-                                            break;
-                                        case 'b':
-                                            charColor = Color.Cyan;
-                                            break;
-                                        case 'c':
-                                            charColor = Color.Red;
-                                            break;
-                                        case 'd':
-                                            charColor = Color.Magenta;
-                                            break;
-                                        case 'e':
-                                            charColor = Color.Yellow;
-                                            break;
-                                        case 'f':
-                                            charColor = Color.White;
-                                            break;
-                                        case 'o':
-                                            charColor = Color.Orange;
-                                            break;
-                                        case 'n':
-                                            charColor = Color.SaddleBrown;
-                                            break;
-                                        case 'r':
-                                            charColor = Color.Gray;
-                                            break;
-                                    }
-
-                                    if (parts[i].Length > 1)
-                                        AppendColoredTextToConsole(parts[i].Substring(1, parts[i].Length - 1),
-                                            charColor);
-                                }
-                            }
-                        }
-
-                        AppendColoredTextToConsole("", Color.White, true);
-                        return false;
-                    }
-
-                    //autoscroll();
-                });
-            }
-        }
-
         public void ShowCrackedBox()
         {   /*
             var result =
@@ -791,6 +604,30 @@ namespace AmongUsCapture_GTK
                 (byte)(gtkcolor.Blue * 255));
 
         }
+        
+        private Color Rainbow(float progress)
+        {
+            var div = Math.Abs(progress % 1) * 6;
+            var ascending = (int) (div % 1 * 255);
+            var descending = 255 - ascending;
+
+            switch ((int) div)
+            {
+                case 0:
+                    return Color.FromArgb(255, 255, ascending, 0);
+                case 1:
+                    return Color.FromArgb(255, descending, 255, 0);
+                case 2:
+                    return Color.FromArgb(255, 0, 255, ascending);
+                case 3:
+                    return Color.FromArgb(255, 0, descending, 255);
+                case 4:
+                    return Color.FromArgb(255, ascending, 0, 255);
+                default: // case 5:
+                    return Color.FromArgb(255, 255, 0, descending);
+            }
+        }
+
     
     }
 }

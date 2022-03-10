@@ -14,7 +14,12 @@ namespace AmongUsCapture_GTK.ConsoleTypes
         public MainGTKWindow form;
         private static object locker = new Object();
 
-        public FormConsole(MainGTKWindow mainWindow)
+        private Dictionary<string, Color> ModuleColor = new Dictionary<string, Color>()
+        {
+            { "GameMemReader", Color.Purple } 
+        };
+
+    public FormConsole(MainGTKWindow mainWindow)
         {
             form = mainWindow;
             string directoryuri = null;
@@ -51,8 +56,7 @@ namespace AmongUsCapture_GTK.ConsoleTypes
             form.WriteConsoleLineFormatted(ModuleName, moduleColor, text);
             WriteToLog($"[{ModuleName}]: {text}");
         }
-
-
+        
         public void WriteToLog(string textToLog)
         {
             WriteLogLine(DateTime.UtcNow, textToLog);
@@ -60,7 +64,7 @@ namespace AmongUsCapture_GTK.ConsoleTypes
 
         private string StripColor(string text)
         {
-            return TextColor.StripColor(text);
+            return PangoColor.StripColor(text);
         }
 
         private void WriteLogLine(DateTime time, string textToLog)
