@@ -28,6 +28,15 @@ namespace AmongUsCapture_GTK
         private Frame _gameInfoParentFrame;
         private VBox _gameInfoParentContainer;
         
+        // Current State objects
+        private Box _currentStateContainer;
+        private Frame _currentStateFrame;
+        private Label _currentStateLabel;
+
+        private Box _gameStateContainer;
+        private Frame _gameStateFrame;
+        private Label _gameStateLabel;
+        
         // GameCode objects
         private Frame _gameCodeParentFrame;
         private Box _gameCodeLayoutContainer;
@@ -57,15 +66,7 @@ namespace AmongUsCapture_GTK
         private ScrolledWindow _consoleScrolledWindow;
         private TextView _consoleTextView;
 
-
-        private Box _currentStateContainer;
-        private Frame _currentStateFrame;
-        private Label _currentStateLabel;
-
-
-
-
-
+        
         public void InitializeWindow()
         {
             // Menubar
@@ -97,6 +98,11 @@ namespace AmongUsCapture_GTK
             _currentStateContainer = new Box(Orientation.Vertical, 0);
             _currentStateLabel = new Label();
 
+            _gameStateFrame = new Frame();
+            _gameStateContainer = new Box(Orientation.Vertical, 0);
+            _gameStateLabel = new Label();
+            
+            
             // Left Side Game Code Fields
             _gameCodeParentFrame = new Frame();
             _gameCodeLayoutContainer = new HBox();
@@ -185,6 +191,7 @@ namespace AmongUsCapture_GTK
 
             _gameInfoParentContainer.Name = "_gameInfoParentContainer";
             _gameInfoParentContainer.PackStart(_currentStateFrame, true, false, 10);
+            _gameInfoParentContainer.PackStart(_gameStateFrame, true, false, 10);
             _gameInfoParentContainer.PackStart(_gameCodeParentFrame, true, false, 10);
             _gameInfoParentContainer.Margin = 5;
             
@@ -193,6 +200,8 @@ namespace AmongUsCapture_GTK
             _currentStateFrame.Label = "Current State";
             _currentStateFrame.Name = "_currentStateFrame";
             _currentStateFrame.SetSizeRequest(55, 40);
+
+
 
             // CurrentStateBox
             _currentStateContainer.Name = "_currentStateContainer";
@@ -203,7 +212,24 @@ namespace AmongUsCapture_GTK
 
             // CurrentState
             _currentStateLabel.Name = "_currentStateLabel";
-            _currentStateLabel.Text = "Disconnected";
+            _currentStateLabel.Text = "Not Hooked";
+            
+            // GameStateFrame
+            _gameStateFrame.Add(_gameStateContainer);
+            _gameStateFrame.Label = "Game State";
+            _gameStateFrame.Name = "_gameStateFrame";
+            _gameStateFrame.SetSizeRequest(55, 40);
+
+            // GameStateContainer
+            _gameStateContainer.Name = "_gameStateContainer";
+            _gameStateContainer.SetSizeRequest(55, 40);
+            _gameStateContainer.PackStart(_gameStateLabel, true, false, 5);
+            _gameStateContainer.Halign = Align.Center;
+            _gameStateContainer.Valign = Align.Center;
+            
+            // GameStateLabel
+            _gameStateLabel.Name = "_gameStateLabel";
+            _gameStateLabel.Text = "-";
 
             //
             // GAME CODE UI BLOCK

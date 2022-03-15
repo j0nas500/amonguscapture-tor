@@ -33,6 +33,8 @@ namespace AmongUsCapture {
         private Dictionary<string, PlayerInfo> oldPlayerInfos = new(15); // Important: this is making the assumption that player names are unique. They are, but for better tracking of players and to eliminate any ambiguity the keys of this probably need to be the players' network IDs instead
 
         private GameState oldState = GameState.UNKNOWN;
+        private bool PreviousAttachState = false;
+        
         private int prevChatBubsVersion;
         private bool shouldForceTransmitState;
         private bool shouldForceUpdatePlayers;
@@ -248,25 +250,44 @@ namespace AmongUsCapture {
             return GameAssemblyhashSb.ToString();
         }
 
-        public void RunLoop() {
-            while (true) {
-                try {
+        public void RunLoop()
+        {
+            while (true)
+            {
+                try
+                {
                     #region Game attaching
-                    if (!Attached) {
+
+                    if (!Attached)
+                    {
+                        if (PreviousAttachState)
+                        {
+                            ProcessUnHook.Invoke(this, new ProcessHookArgs() {PID = -1});
+                            PreviousAttachState = false;
+                        }
+
                         var foundModule = false;
-                        while (!foundModule) {
-                            if (!ProcessMemory.getInstance().HookProcess("Among Us")) {
+                        while (!foundModule)
+                        {
+                            if (!ProcessMemory.getInstance().HookProcess("Among Us"))
+                            {
                                 Thread.Sleep(1000);
                                 continue;
                             }
-                            Logger.Info("Connected to Among Us process ({pid})", ProcessMemory.getInstance().process.Id);
-                            foreach (var module in ProcessMemory.getInstance().modules.Where(module => module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase))) {
+
+                            Logger.Info("Connected to Among Us process ({pid})",
+                                ProcessMemory.getInstance().process.Id);
+                            foreach (var module in ProcessMemory.getInstance().modules.Where(module =>
+                                         module.Name.Equals("GameAssembly.dll", StringComparison.OrdinalIgnoreCase)))
+                            {
                                 GameAssemblyPtr = module.BaseAddress;
-                                if (!GameVerifier.VerifySteamHash(module.FileName)) {
+                                if (!GameVerifier.VerifySteamHash(module.FileName))
+                                {
                                     cracked = true;
                                     Logger.Info("Client verification: {$status}", "FAIL");
                                 }
-                                else {
+                                else
+                                {
                                     cracked = false;
                                     Logger.Info("Client verification: {$status}", "PASS");
                                 }
@@ -276,17 +297,21 @@ namespace AmongUsCapture {
                                     GameHash = GetSha256Hash(module.FileName);
                                     Logger.Info("GameAssembly sha256: {GameHash}", GameHash);
                                 }
-                                catch (Exception e) {
+                                catch (Exception e)
+                                {
                                     cracked = false;
                                     GameHash = "windows_store";
                                 }
 
                                 CurrentOffsets = offMan.FetchForHash(GameHash);
-                                if (CurrentOffsets is not null) {
+                                if (CurrentOffsets is not null)
+                                {
                                     Logger.Info("Loaded offsets: {offsetDescription}", CurrentOffsets.Description);
-                                    ProcessHook?.Invoke(this, new ProcessHookArgs {PID = ProcessMemory.getInstance().process.Id});
+                                    ProcessHook?.Invoke(this,
+                                        new ProcessHookArgs {PID = ProcessMemory.getInstance().process.Id});
                                 }
-                                else {
+                                else
+                                {
                                     Logger.Fatal("No offsets found for hash: {GameHash}", GameHash);
                                 }
 
@@ -303,45 +328,57 @@ namespace AmongUsCapture {
                         if (CurrentOffsets is null) Logger.Error("Outdated version of the game");
                     }
 
-                    if (cracked && ProcessMemory.getInstance().IsHooked) {
+                    if (cracked && ProcessMemory.getInstance().IsHooked)
+                    {
                         CrackDetected?.Invoke(this, EventArgs.Empty);
                     }
 
                     if (CurrentOffsets is null) continue;
-                    
+
 
                     #endregion
+
                     var state = GetGameState(ProcessMemory.getInstance());
+
                     #region Check if exile causes game end
 
-                    if (oldState == GameState.DISCUSSION && state == GameState.TASKS) {
-                        
+                    if (oldState == GameState.DISCUSSION && state == GameState.TASKS)
+                    {
+
                         var exiledPlayer = GetExiledPlayer(ProcessMemory.getInstance());
-                        if (exiledPlayer is not null) {
+                        if (exiledPlayer is not null)
+                        {
                             int impostorCount = 0, innocentCount = 0;
-                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
+                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs
+                            {
                                 Action = PlayerAction.Exiled,
                                 Name = exiledPlayer.GetPlayerName(),
                                 IsDead = exiledPlayer.GetIsDead(),
                                 Disconnected = exiledPlayer.GetIsDisconnected(),
                                 Color = exiledPlayer.GetPlayerColor()
                             });
-                            impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
-                            innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
+                            impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x =>
+                                x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId &&
+                                !x.GetIsDead() && !x.GetIsDisconnected());
+                            innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x =>
+                                !x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId &&
+                                !x.GetIsDead() && !x.GetIsDisconnected());
 
-                            if (impostorCount == 0 || impostorCount >= innocentCount) {
+                            if (impostorCount == 0 || impostorCount >= innocentCount)
+                            {
                                 exileCausesEnd = true;
                                 state = GameState.LOBBY;
                             }
                         }
-                        
+
                     }
 
                     #endregion
 
                     #region State change checking
 
-                    if (state != oldState || shouldForceTransmitState) {
+                    if (state != oldState || shouldForceTransmitState)
+                    {
                         GameStateChanged?.Invoke(this, new GameStateChangedEventArgs {NewState = state});
                         shouldForceTransmitState = false;
                     }
@@ -350,10 +387,13 @@ namespace AmongUsCapture {
 
                     #region Lobby Reading
 
-                    if (state != oldState && state == GameState.LOBBY || shouldReadLobby) {
+                    if (state != oldState && state == GameState.LOBBY || shouldReadLobby)
+                    {
                         var gameCode = GetGameCode(ProcessMemory.getInstance());
-                        if (!string.IsNullOrEmpty(gameCode)) {
-                            latestLobbyEventArgs = new LobbyEventArgs {
+                        if (!string.IsNullOrEmpty(gameCode))
+                        {
+                            latestLobbyEventArgs = new LobbyEventArgs
+                            {
                                 LobbyCode = gameCode,
                                 Region = GetPlayRegion(ProcessMemory.getInstance()),
                                 Map = GetMap(ProcessMemory.getInstance())
@@ -361,7 +401,8 @@ namespace AmongUsCapture {
                             shouldReadLobby = false;
                             shouldTransmitLobby = true; // since this is probably new info
                         }
-                        else {
+                        else
+                        {
                             shouldReadLobby = true; //We got a blank game code last time, so lets try again next time
                         }
                     }
@@ -370,7 +411,8 @@ namespace AmongUsCapture {
 
                     #region Lobby transmitting
 
-                    if (shouldTransmitLobby) {
+                    if (shouldTransmitLobby)
+                    {
                         if (latestLobbyEventArgs != null) JoinedLobby?.Invoke(this, latestLobbyEventArgs);
 
                         shouldTransmitLobby = false;
@@ -380,7 +422,8 @@ namespace AmongUsCapture {
 
                     #region Game ended processing
 
-                    if (oldState == GameState.ENDED && (state == GameState.LOBBY || state == GameState.MENU)) // game ended
+                    if (oldState == GameState.ENDED &&
+                        (state == GameState.LOBBY || state == GameState.MENU)) // game ended
                     {
                         var gameOverReason = GetGameOverReason(ProcessMemory.getInstance());
 
@@ -389,14 +432,17 @@ namespace AmongUsCapture {
                                         gameOverReason == GameOverReason.HumansByVote;
                         if (humansWon) // we will be reading humans data, so set all to simps
                             foreach (var playerName in CachedPlayerInfos.Keys)
-                                try {
+                                try
+                                {
                                     CachedPlayerInfos[playerName].IsImpostor = true;
                                 }
-                                catch (KeyNotFoundException e) {
+                                catch (KeyNotFoundException e)
+                                {
                                     Console.WriteLine($"Could not find User: \"{playerName}\" in CachedPlayerinfos");
                                 }
 
-                        GameOver?.Invoke(this, new GameOverEventArgs {
+                        GameOver?.Invoke(this, new GameOverEventArgs
+                        {
                             GameOverReason = gameOverReason,
                             PlayerInfos = GetEndingPlayerInfos(ProcessMemory.getInstance(), CachedPlayerInfos)
                         });
@@ -407,16 +453,19 @@ namespace AmongUsCapture {
                     #region Read player information
 
                     newPlayerInfos.Clear();
-                    newPlayerInfos = GetPlayers(ProcessMemory.getInstance()).ToDictionary(x => x.GetPlayerName(), x => x);
+                    newPlayerInfos = GetPlayers(ProcessMemory.getInstance())
+                        .ToDictionary(x => x.GetPlayerName(), x => x);
                     DetectPlayerChanges(ProcessMemory.getInstance(), newPlayerInfos, oldPlayerInfos);
 
                     #endregion
 
                     #region Resend all players if requested
 
-                    if (shouldForceUpdatePlayers) {
+                    if (shouldForceUpdatePlayers)
+                    {
                         foreach (var player in newPlayerInfos.Values)
-                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs {
+                            PlayerChanged?.Invoke(this, new PlayerChangedEventArgs
+                            {
                                 Action = PlayerAction.ForceUpdated,
                                 Name = player.GetPlayerName(),
                                 IsDead = player.GetIsDead(),
@@ -431,11 +480,14 @@ namespace AmongUsCapture {
 
                     #region Cache Immutable players for winning handling
 
-                    if (state != oldState && (state == GameState.DISCUSSION || state == GameState.TASKS)) // game started, or at least we're still in game
+                    if (state != oldState &&
+                        (state == GameState.DISCUSSION ||
+                         state == GameState.TASKS)) // game started, or at least we're still in game
                     {
                         CachedPlayerInfos.Clear();
                         foreach (var (playerName, pi) in newPlayerInfos)
-                            CachedPlayerInfos[playerName] = new ImmutablePlayer {
+                            CachedPlayerInfos[playerName] = new ImmutablePlayer
+                            {
                                 Name = playerName,
                                 IsImpostor = false
                             };
@@ -450,8 +502,16 @@ namespace AmongUsCapture {
 
                     #endregion
 
+                    PreviousAttachState = true;
                     Thread.Sleep(250);
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
+                    ProcessUnHook.Invoke(this, new ProcessHookArgs()
+                    {
+                        PID = 0
+                    });
+                    PreviousAttachState = false;
                     Logger.Error(e);
                     Thread.Sleep(1000);
                 }

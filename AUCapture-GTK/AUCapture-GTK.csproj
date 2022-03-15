@@ -50,7 +50,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="PangoText" />
+      <Folder Include="Logging" />
     </ItemGroup>
 
 </Project>

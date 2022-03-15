@@ -82,10 +82,9 @@ namespace AmongUsCapture_GTK
             clientSocket = sock;
             clientSocket.Init();
             InitializeWindow();
-            GameMemReader.getInstance().GameVersionUnverified += _eventGameIsUnverified;
-            GameMemReader.getInstance().GameStateChanged += _eventGameStateChanged;
-            GameMemReader.getInstance().JoinedLobby += _eventJoinedLobby;
-            GameMemReader.getInstance().ChatMessageAdded += _eventChatMessageAdded;
+            GameMemReader.getInstance().ProcessHook += _eventGameIsHooked;
+            GameMemReader.getInstance().ProcessUnHook += _eventGameIsUnhooked;
+
 
             // Load URL
             _urlHostEntryField.Text = AmongUsCapture.Settings.PersistentSettings.host;
@@ -106,6 +105,7 @@ namespace AmongUsCapture_GTK
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 // Windows doesn't support this. Skip the handler automatically and deactivate the button.
+                // This will be added later, IMO should probably be added to mainline branch.
                 skippingHandler = true; 
                 _primaryWindowInstallLinkHandler.Sensitive = false;
             }
@@ -407,7 +407,7 @@ namespace AmongUsCapture_GTK
             
             Idle.Add(delegate
             {
-                _currentStateLabel.Text = e.NewState.ToString();
+                _gameStateLabel.Text = e.NewState.ToString();
                 return false;
             });
             GtkSettings.conInterface.WriteModuleTextColored("GameMemReader", Color.Lime, $"State changed to {Color.Cyan.ToTextColorPango(e.NewState.ToString())}");
@@ -461,6 +461,25 @@ namespace AmongUsCapture_GTK
                 _connectCodeSubmitButton.Sensitive = true;
                 _urlHostEntryField.Sensitive = true;
             }
+        }
+
+        private void _eventGameIsHooked(object sender, ProcessHookArgs args)
+        {
+            _currentStateLabel.Text = $"Hooked (PID {args.PID})";
+            GameMemReader.getInstance().GameVersionUnverified += _eventGameIsUnverified;
+            GameMemReader.getInstance().GameStateChanged += _eventGameStateChanged;
+            GameMemReader.getInstance().JoinedLobby += _eventJoinedLobby;
+            GameMemReader.getInstance().ChatMessageAdded += _eventChatMessageAdded;
+        }
+
+        private void _eventGameIsUnhooked(object sender, ProcessHookArgs args)
+        {
+            _currentStateLabel.Text = $"Not Hooked";
+            _gameStateLabel.Text = "-";
+            GameMemReader.getInstance().GameVersionUnverified -= _eventGameIsUnverified;
+            GameMemReader.getInstance().GameStateChanged -= _eventGameStateChanged;
+            GameMemReader.getInstance().JoinedLobby -= _eventJoinedLobby;
+            GameMemReader.getInstance().ChatMessageAdded -= _eventChatMessageAdded;
         }
 
         /*
