@@ -25,7 +25,7 @@ jobs:
           dotnet-version: 5.0.100
 
       - name: Install dependencies
-        run: dotnet restore "AUCapture-WPF\AUCapture-WPF.csproj"
+        run: dotnet restore "AUCapture-GTK\AUCapture-GTK.csproj"
 
       - name: Publish
         run: |
