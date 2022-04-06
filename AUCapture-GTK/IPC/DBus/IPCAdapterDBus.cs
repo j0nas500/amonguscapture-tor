@@ -60,9 +60,8 @@ namespace AmongUsCapture_GTK.IPC.DBus
                             
                             foreach (ProcessModule mod in capproc.Modules)
                             {
-                                // If we find amonguscapturedll in the modules, we can be certain
-                                // that the located pid is, in fact, an AmongUsCapture process.
-                                if (mod.ModuleName == "AmongUsCapture.dll")
+                                // Look for the AUCapture-GTK Module to insure that the capture is in fact a caputre process.
+                                if (mod.ModuleName == "AUCapture-GTK")
                                 {
                                     iscapture = true;
                                     break;

@@ -84,6 +84,7 @@ namespace AmongUsCapture_GTK
             InitializeWindow();
             GameMemReader.getInstance().ProcessHook += _eventGameIsHooked;
             GameMemReader.getInstance().ProcessUnHook += _eventGameIsUnhooked;
+            IPCAdapter.getInstance().OnToken += _eventOnTokenHandler;
 
 
             // Load URL
@@ -204,7 +205,7 @@ namespace AmongUsCapture_GTK
                         "\n\nIf you decline, Discord connection links will not be functional." +
                         "\n\nYou can install or manage One-Click support by using the \"One-Click Connection Management\" link in the File menu.";
 
-                        InstallLinkDialogBox.Text = info;
+                    InstallLinkDialogBox.Text = info;
                     InstallLinkDialogBox.Title = "Enable One-Click Connection?";
                     InstallLinkDialogBox.AddButton("Cancel", ResponseType.Reject);
                     InstallLinkDialogBox.AddButton("Install", ResponseType.Accept);
@@ -497,6 +498,12 @@ namespace AmongUsCapture_GTK
                 scrolladj.Value = scrolladj.Upper - scrolladj.PageSize;
             }
             
+        }
+        
+        public void _eventOnTokenHandler(object sender, StartToken token)
+        {
+            Logger.Info("Attempting to connect to host: {host} with connect code: {connectCode}", token.Host, token.ConnectCode);
+            clientSocket.Connect(token.Host, token.ConnectCode);
         }
 
         public void WriteConsoleLineFormatted(string moduleName, Color moduleColor, string message)
