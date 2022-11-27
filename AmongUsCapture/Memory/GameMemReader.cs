@@ -327,6 +327,7 @@ namespace AmongUsCapture {
                             impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
                             innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
 
+                            // commented cause of Neutral Roles
                             /*if (impostorCount == 0 || impostorCount >= innocentCount) {
                                 exileCausesEnd = true;
                                 state = GameState.LOBBY;
@@ -501,7 +502,7 @@ namespace AmongUsCapture {
         Banana = 14,
         Gray = 15,
         Tan = 16,
-        Sunset = 17,
+        Coral = 17,
         Salmon = 18,
         Bordeaux = 19,
         Olive = 20,
