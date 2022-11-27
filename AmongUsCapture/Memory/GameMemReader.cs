@@ -105,7 +105,7 @@ namespace AmongUsCapture {
             for (var i = 0; i < playerCount; i++) {
                 var pi = new PlayerInfo(playerAddrPtr, memInstance, CurrentOffsets);
                 //var pi = CurrentOffsets.isEpic ? (PlayerInfo) memInstance.Read<EpicPlayerInfo>(playerAddrPtr, 0, 0) : memInstance.Read<SteamPlayerInfo>(playerAddrPtr, 0, 0);
-                if(pi.GetPlayerName() is null || pi.GetPlayerName() == "") continue;
+                if(pi.GetPlayerName() is null || pi.GetPlayerName() == "" || !Enum.IsDefined(typeof(PlayerColor), pi.GetPlayerColor())) continue;
                 playerAddrPtr += CurrentOffsets.AddPlayerPtr;
                 Players.Add(pi);
             }
@@ -225,8 +225,7 @@ namespace AmongUsCapture {
         private string? GetGameCode(ProcessMemory memInstance) {
             var gameCode = memInstance.ReadString(ProcessMemory.getInstance().Read<IntPtr>(GameAssemblyPtr, CurrentOffsets.GameCodeOffsets), CurrentOffsets.StringOffsets[0], CurrentOffsets.StringOffsets[1]);
             if (string.IsNullOrEmpty(gameCode)) return null;
-            var split = gameCode.Split("\n");
-            return split.Length == 2 ? split[1] : null;
+            return gameCode;
         }
 
         private PlayRegion GetPlayRegion(ProcessMemory memInstance) {
