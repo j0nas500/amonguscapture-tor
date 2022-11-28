@@ -229,7 +229,13 @@ namespace AmongUsCapture {
         }
 
         private PlayRegion GetPlayRegion(ProcessMemory memInstance) {
-            return (PlayRegion) ((4 - (memInstance.Read<int>(GameAssemblyPtr, CurrentOffsets.PlayRegionOffsets) & 0b11)) % 3); // do NOT ask
+            return memInstance.Read<int>(GameAssemblyPtr, CurrentOffsets.PlayRegionOffsets) switch
+            {
+                6 => PlayRegion.Europe,
+                13 => PlayRegion.NorthAmerica,
+                4 => PlayRegion.Asia,
+                _ => PlayRegion.Custom,
+            };
         }
 
         private PlayMap GetMap(ProcessMemory memInstance) {
