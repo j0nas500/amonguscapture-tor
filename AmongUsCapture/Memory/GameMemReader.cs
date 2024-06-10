@@ -508,7 +508,7 @@ namespace AmongUsCapture {
         Tamarind	 = 18,
         Army		 = 19,
         Olive        = 20,
-        Turqoise     = 21,
+        Turquoise     = 21,
         Mint         = 22,
         Lavender     = 23,
         Nougat       = 24,
