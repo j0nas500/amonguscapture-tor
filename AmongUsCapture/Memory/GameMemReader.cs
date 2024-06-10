@@ -328,10 +328,12 @@ namespace AmongUsCapture {
                             impostorCount = GetPlayers(ProcessMemory.getInstance()).Count(x => x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
                             innocentCount = GetPlayers(ProcessMemory.getInstance()).Count(x => !x.GetIsImposter() && x.PlayerName != "" && x.PlayerId != exiledPlayer.PlayerId && !x.GetIsDead() && !x.GetIsDisconnected());
 
+                            // commented out cause of Neutral Roles
+                            /*
                             if (impostorCount == 0 || impostorCount >= innocentCount) {
                                 exileCausesEnd = true;
                                 state = GameState.LOBBY;
-                            }
+                            }*/
                         }
                         
                     }
@@ -485,24 +487,48 @@ namespace AmongUsCapture {
     }
 
     public enum PlayerColor {
-        Red = 0,
-        Blue = 1,
-        Green = 2,
-        Pink = 3,
-        Orange = 4,
-        Yellow = 5,
-        Black = 6,
-        White = 7,
-        Purple = 8,
-        Brown = 9,
-        Cyan = 10,
-        Lime = 11,
-        Maroon = 12,
-        Rose = 13,
-        Banana = 14,
-        Gray = 15,
-        Tan = 16,
-        Coral = 17
+        Red          = 0,
+        Blue         = 1,
+        Green        = 2,
+        Pink         = 3,
+        Orange       = 4,
+        Yellow       = 5,
+        Black        = 6,
+        White        = 7,
+        Purple       = 8,
+        Brown        = 9,
+        Cyan         = 10,
+        Lime         = 11,
+        Maroon       = 12,
+        Rose         = 13,
+        Banana       = 14,
+        Gray         = 15,
+        Tan          = 16,
+        Coral        = 17,
+        Tamarind	 = 18,
+        Army		 = 19,
+        Olive        = 20,
+        Turqoise     = 21,
+        Mint         = 22,
+        Lavender     = 23,
+        Nougat       = 24,
+        Peach        = 25,
+        Wasabi       = 26,
+        HotPink      = 27,
+        Petrol       = 28,
+        Lemon        = 29,
+        SignalOrange = 30,
+        Teal         = 31,
+        Blurple      = 32,
+        Sunrise      = 33,
+        Ice          = 34,
+        Fuchsia		 = 35,
+        RoyalGreen	 = 36,
+        Slime		 = 37,
+        Navy		 = 38,
+        Darkness	 = 39,
+        Ocean		 = 40,
+        Sundown		 = 41
     }
 
     public enum PlayRegion {
