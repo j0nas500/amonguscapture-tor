@@ -58,60 +58,60 @@ public sealed class NlogGTKConsoleTarget : TargetWithContext
     private Color PlayerColorToColorOBJ(PlayerColor pColor) {
         var OutputCode = Color.White; 
         switch (pColor) {
-            case PlayerColor.Red: 
-                OutputCode = Color.Red; 
-                break;
-            case PlayerColor.Blue:
-                OutputCode = Color.RoyalBlue;
-                break;
-            case PlayerColor.Green:
-                OutputCode = Color.Green;
-                break;
-            case PlayerColor.Pink:
-                OutputCode = Color.Magenta;
-                break;
-            case PlayerColor.Orange:
-                OutputCode = Color.Orange;
-                break;
-            case PlayerColor.Yellow:
-                OutputCode = Color.Yellow;
-                break;
-            case PlayerColor.Black:
-                OutputCode = Color.Gray;
-                break;
-            case PlayerColor.White:
-                OutputCode = Color.White;
-                break;
-            case PlayerColor.Purple:
-                OutputCode = Color.MediumPurple;
-                break;
-            case PlayerColor.Brown:
-                OutputCode = Color.SaddleBrown;
-                break;
-            case PlayerColor.Cyan:
-                OutputCode = Color.Cyan;
-                break;
-            case PlayerColor.Lime:
-                OutputCode = Color.Lime;
-                break;
-            case PlayerColor.Maroon:
-                OutputCode = Color.Maroon;
-                break;
-            case PlayerColor.Rose:
-                OutputCode = Color.MistyRose;
-                break;
-            case PlayerColor.Banana:
-                OutputCode = Color.LightGoldenrodYellow;
-                break;
-            case PlayerColor.Gray:
-                OutputCode = Color.Gray;
-                break;
-            case PlayerColor.Tan:
-                OutputCode = Color.Tan;
-                break;
-            case PlayerColor.Sunset:
-                OutputCode = Color.LightSalmon;
-                break;
+            case PlayerColor.Red:
+                    OutputCode = Color.Red;
+                    break;
+                case PlayerColor.Blue:
+                    OutputCode = Color.RoyalBlue;
+                    break;
+                case PlayerColor.Green:
+                    OutputCode = Color.Green;
+                    break;
+                case PlayerColor.Pink:
+                    OutputCode = Color.Magenta;
+                    break;
+                case PlayerColor.Orange:
+                    OutputCode = Color.Orange;
+                    break;
+                case PlayerColor.Yellow:
+                    OutputCode = Color.Yellow;
+                    break;
+                case PlayerColor.Black:
+                    OutputCode = Color.Gray;
+                    break;
+                case PlayerColor.White:
+                    OutputCode = Color.White;
+                    break;
+                case PlayerColor.Purple:
+                    OutputCode = Color.MediumPurple;
+                    break;
+                case PlayerColor.Brown:
+                    OutputCode = Color.SaddleBrown;
+                    break;
+                case PlayerColor.Cyan:
+                    OutputCode = Color.Cyan;
+                    break;
+                case PlayerColor.Lime:
+                    OutputCode = Color.Lime;
+                    break;
+                case PlayerColor.Maroon:
+                    OutputCode = Color.Maroon;
+                    break;
+                case PlayerColor.Rose:
+                    OutputCode = Color.MistyRose;
+                    break;
+                case PlayerColor.Banana:
+                    OutputCode = Color.LemonChiffon;
+                    break;
+                case PlayerColor.Gray:
+                    OutputCode = Color.Gray;
+                    break;
+                case PlayerColor.Tan:
+                    OutputCode = Color.Tan;
+                    break;
+                case PlayerColor.Coral:
+                    OutputCode = Color.LightCoral;
+                    break;
         }
 
             return OutputCode;
