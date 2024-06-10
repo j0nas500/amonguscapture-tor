@@ -49,13 +49,14 @@ namespace AmongUsCapture
                             is64Bit = flag;
 
                             LoadModules();
-
+                            
                         }
 
                     }
                 }
             }
-
+            
+            IsHooked = process != null && !process.HasExited;
             return IsHooked;
         }
 
@@ -119,7 +120,7 @@ namespace AmongUsCapture
             {
                 Name = librarypath.Split('/').Last().Trim(), // Make sure hidden characters aren't there.
                 BaseAddress = (IntPtr) addr_start,
-                FileName = librarypath,
+                FileName = librarypath.Trim(), // Linux is much stricter about whitespace - make sure that the path is trimmed!
                 MemorySize = memsize,
                 EntryPointAddress = IntPtr.Zero
             });

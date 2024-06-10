@@ -24,7 +24,7 @@ namespace AmongUsCapture
     
     public static class GameVerifier
     {
-        private const string steamapi32_orig_hash = "07407c1bc2f3114042dbcfe8183b77f73e178be7";
+        private const string steamapi32_orig_hash = "b453c5a8e8cd839d3c5ed2ec4ed05805179ea3c2";
         private const string steamapi64_orig_hash = "e77433094c56433685a68a4436e81b76c3b5e1f5";
         private const string amongusexe_orig_hash = "adb281fa5deee89800ddf68eea941a6b8cf6f38e";
         private const string gameassembly_orig_hash = "009a5b65dca2bbf48d64b6e9e13a050ef3dbf201";
@@ -52,15 +52,21 @@ namespace AmongUsCapture
            {
                 var baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName,
                     "/Among Us_Data/Plugins/x86/");
+                if (!Directory.Exists(baseDllFolder))
+                {
+                    baseDllFolder = Path.Join(Directory.GetParent(executablePath).FullName,
+                        "/Among Us_Data/Plugins/x86_64/");
+                }
                 
                 var steam_apiPath = Path.Join(baseDllFolder, "steam_api.dll");
+               
                 var steam_api64Path = Path.Join(baseDllFolder, "steam_api64.dll");
                 var steam_apiHash = String.Empty;
                 var steam_api64Hash = String.Empty;
-                
+
                 using (SHA1Managed sha1 = new SHA1Managed())
                 {
-                    
+
                     using (FileStream fs = new FileStream(steam_apiPath, FileMode.Open))
                     {
                         using (var bs = new BufferedStream(fs))
@@ -74,21 +80,28 @@ namespace AmongUsCapture
 
                             steam_apiHash = steam_apihashSb.ToString();
                         }
-                    }    
-                    
-                    using (FileStream fs = new FileStream(steam_api64Path, FileMode.Open))
-                    {
-                        using (var bs = new BufferedStream(fs))
-                        {
-                            var hash = sha1.ComputeHash(bs);
-                            StringBuilder steam_api64hashSb = new StringBuilder(2 * hash.Length);
-                            foreach (byte byt in hash)
-                            {
-                                steam_api64hashSb.AppendFormat("{0:X2}", byt);
-                            }
+                    }
 
-                            steam_api64Hash = steam_api64hashSb.ToString();
+                    if (File.Exists(steam_api64Path))
+                    {
+                        using (FileStream fs = new FileStream(steam_api64Path, FileMode.Open))
+                        {
+                            using (var bs = new BufferedStream(fs))
+                            {
+                                var hash = sha1.ComputeHash(bs);
+                                StringBuilder steam_api64hashSb = new StringBuilder(2 * hash.Length);
+                                foreach (byte byt in hash)
+                                {
+                                    steam_api64hashSb.AppendFormat("{0:X2}", byt);
+                                }
+
+                                steam_api64Hash = steam_api64hashSb.ToString();
+                            }
                         }
+                    }
+                    else
+                    {
+                        steam_api64Hash = steamapi64_orig_hash.ToUpper();
                     }
                 }
 
