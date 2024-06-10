@@ -1,95 +1,95 @@
-<a href="https://automute.us">
-<img alt="Banner" src="https://media.discordapp.net/attachments/759195945044017234/798382462157193246/banner.png?width=1440&height=274">
-</a>
+# amonguscapture-gtk <img src="AmongUsCapture/icon.ico" width="48">
+[![Build](https://github.com/TauAkiou/amonguscapture-gtk/workflows/Beta%20releases/badge.svg)](https://github.com/tauakiou/amonguscapture-gtk/actions?query=Beta%20releases)
 
-#
+Capture of the local Among Us executable state
+
+The amonguscapture-gtk project brings the amonguscapture utility to other platforms by removing the Windows dependent WinForms framework and replacing it with the open-source GTK framework (https://www.gtk.org/).
+
+AmongusCapture-gtk is currently supported under:
+* Windows
+* Linux
+
+## Prebuilt Releases
+Prebuilt releases are available here: [prebuilt releases](https://github.com/TauAkiou/amonguscapture-gtk/releases)
+
+## NOTE FOR LINUX USERS:
+
+Some linux distributions will prevent AmongUsCapture from linking with the Among Us game process. This is due to a [ptrace scope security feature](https://askubuntu.com/questions/146160/what-is-the-ptrace-scope-workaround-for-wine-programs-and-are-there-any-risks).
+
+In order for the capture to work, you must use `setcap` to add ptrace capabilities to the Capture process. Note that doing so will require root!
+
+```
+sudo setcap cap_sys_ptrace=eip <capture executable>
+```
+
+Also note that moving or changing the capture in any way will strip these permissions from the executable and you will have to setcap the capture again.
+
+Distributions known to be affected by this:
+* Ubuntu
+* Arch
+
+## Requirements:
+
+### Windows:
+
+While you can use amonguscapture-gtk under Windows, we recommend using the [official release](https://github.com/denverquane/amonguscapture).
+
+* .NET Core 3.1 Runtime: https://dotnet.microsoft.com/download/dotnet-core/current/runtime
+* GTK For Windows Runtime: https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer
+
+amonguscapture-gtk is a GTK3 app. Remember to choose the gtk3 installer when downloading the runtime.
+
+### Linux:
+
+* .NET Core 3.1: https://docs.microsoft.com/en-us/dotnet/core/install/linux
+* GTK3: Check your distribution's packaging manager for information on how to install. If you already have Gnome installed, you likely already have gtk3.
+
+## Building
+
+### Windows
+
+
+* .NET Core SDK: https://dotnet.microsoft.com/download
+* Visual Studio
+```
+    - Create a new file: 'version.txt' in the AmongUsCapture/ directory.
+    - Loading the 'AmongUsCapture.sln' file and building should be sufficient enough.
+```
+    
+ * Command Line
+```
+  - Navigate to the directory you cloned the git repository to, or where you extraced the source package to.
+  
+  - Create a new file 'version.txt' in the AmongUsCapture/ directory.
+  - 'dotnet build --configuration Release' for release builds
+  - 'dotnet build --configuration Debug' for debug builds
+```
+
+
+    
+### Linux
+* .NET Core 3.1 SDK: https://docs.microsoft.com/en-us/dotnet/core/install/linux
+* GTK3 development libraries: Check your distribution's packaging manager for information on how to install.
+
+#### Instructions: 
+
+```
+- git clone https://github.com/TauAkiou/amonguscapture-gtk
+
+- cd amonguscapture-gtk
+
+- dotnet build -c <release/debug>
+```
+
+Your code will be in amonguscapture-gtk/bin/<Release/Debug>/netcoreapp3.1> as "amonguscapture.dll".
+
+If you want a standalone executable: 
+
+```
+- cd amonguscapture-gtk
+
+- dotnet publish "AmongUsCapture\AmongUsCapture.csproj" -p:PublishProfile=LinuxProfilex64 -p:AssemblyVersion=0.0.1
+```
 
 
 
-AmongUsCapture reads game data of Among Us and communicates with 
-[Galactus](https://github.com/automuteus/galactus)
-
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/automuteus/amonguscapture/Beta%20releases/master?label=Beta%20Releases&logo=github) 
-![GitHub all releases](https://img.shields.io/github/downloads/automuteus/amonguscapture/total?label=Total%20Downloads)
-![GitHub release (by tag)](https://img.shields.io/github/downloads/automuteus/amonguscapture/latest/total?label=Latest%20Version%20Downloads)
-[![Discord](https://img.shields.io/discord/754465589958803548?logo=discord)](https://discord.gg/ZkqZSWF)
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-
-
-## Supported versions of Among Us
-| Version         | Supported? |
-|-----------------|:------------:|
-| Steam           |      ✔️     |
-| Epic Games      |      ✔️     |
-| Itch.io         |      ✔️     |
-| Microsoft store |      ✔️     |
-| Cracked         |     [❌](https://tryitands.ee/)    |
-| Beta            |     [❌](https://tryitands.ee/)    |
-
-> **NOTE:** If there has been a recent update, it *may* not be supported **yet**.
-## Automatic Installation	
-
-1) Download the latest version of the CaptureInstaller here: <a href="https://github.com/automuteus/capture-install/releases/latest/download/CaptureInstaller.bat"><img alt="GitHub release" src="https://img.shields.io/github/v/release/automuteus/capture-install?color=blue&label=download&style=flat"></a>	
-2) Once you have the CaptureInstaller.bat run the file and a Windows Smart Screen message may pop up, if so click `More Info` and `Run Anyway` [example](https://media.discordapp.net/attachments/780435741650059268/798023233186168863/smartscreen.png)	
-3) NET 5 Desktop Runtime will start to install and you will be prompted to press `Allow` once it has been installed. Then the rest is done for you!
-
-
-## Manual Installation
-1) Download [.NET Desktop Runtime 5.0.1](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe)
-2) Download the latest version of AmongUsCapture here: <a href="https://capture.automute.us"><img src="https://img.shields.io/github/v/release/automuteus/amonguscapture?label=Download"></a>
-
-
-## Usage
-
-1) Download the the capture with the blue button above or [here](https://capture.automute.us)
-2) Extract the zip file after the download
-3) Run AmongUsCapture
-
-## Troubleshooting 
-<a href="https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe"><img alt="GitHub release" src="https://img.shields.io/badge/Requires-.NET%205%20Desktop%20Runtime-purple"></a>	
-
-![Image1](https://cdn.discordapp.com/attachments/759195945044017234/800786824502575124/unknown.png)
-
-This is caused by not having dotnet 5 installed, You can install it [here](https://download.visualstudio.microsoft.com/download/pr/c6a74d6b-576c-4ab0-bf55-d46d45610730/f70d2252c9f452c2eb679b8041846466/windowsdesktop-runtime-5.0.1-win-x64.exe)
-## Note
-
-Windows Defender may flag this executable as Trojan:Win32/Emali.A!cl, you can make an exception for this file depending on your version of Windows
-
-### Windows 10:
-Windows Security --> Virus & threat protection --> Virus & threat protection settings --> Exclusions --> Add exclusion
-
-Then browse to the AmongUsCapture.exe file and confirm that you want to create the exception.
-
-### Ubuntu/Linux: 
-
-Follow instructions at https://github.com/TauAkiou/amonguscapture-gtk
-
-## Contributors ✨
-
-Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tbody>
-    <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/varedz"><img src="https://avatars.githubusercontent.com/u/56739551?v=4?s=100" width="100px;" alt="varedz"/><br /><sub><b>varedz</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=varedz" title="Code">💻</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/wolfhound905"><img src="https://avatars.githubusercontent.com/u/58155937?v=4?s=100" width="100px;" alt="Wolfhound905"/><br /><sub><b>Wolfhound905</b></sub></a><br /><a href="#design-Wolfhound905" title="Design">🎨</a> <a href="#ideas-Wolfhound905" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/CarbonNeuron"><img src="https://avatars.githubusercontent.com/u/16768821?v=4?s=100" width="100px;" alt="CarbonNeuron"/><br /><sub><b>CarbonNeuron</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=CarbonNeuron" title="Code">💻</a> <a href="#design-CarbonNeuron" title="Design">🎨</a> <a href="#infra-CarbonNeuron" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#security-CarbonNeuron" title="Security">🛡️</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ph0t0shop"><img src="https://avatars.githubusercontent.com/u/14372001?v=4?s=100" width="100px;" alt="ph0t0shop"/><br /><sub><b>ph0t0shop</b></sub></a><br /><a href="https://github.com/automuteus/amonguscapture/commits?author=ph0t0shop" title="Code">💻</a> <a href="#ideas-ph0t0shop" title="Ideas, Planning, & Feedback">🤔</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="http://automute.us"><img src="https://avatars.githubusercontent.com/u/9044037?v=4?s=100" width="100px;" alt="Denver Quane"/><br /><sub><b>Denver Quane</b></sub></a><br /><a href="#ideas-denverquane" title="Ideas, Planning, & Feedback">🤔</a> <a href="#infra-denverquane" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="#maintenance-denverquane" title="Maintenance">🚧</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Aspen-Cyborg"><img src="https://avatars.githubusercontent.com/u/78032877?v=4?s=100" width="100px;" alt="Aspen-Cyborg"/><br /><sub><b>Aspen-Cyborg</b></sub></a><br /><a href="#design-Aspen-Cyborg" title="Design">🎨</a> <a href="#content-Aspen-Cyborg" title="Content">🖋</a></td>
-      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mtaku3"><img src="https://avatars.githubusercontent.com/u/57391256?v=4?s=100" width="100px;" alt="mtaku3"/><br /><sub><b>mtaku3</b></sub></a><br /><a href="#data-mtaku3" title="Data">🔣</a></td>
-    </tr>
-  </tbody>
-</table>
-
-<!-- markdownlint-restore -->
-<!-- prettier-ignore-end -->
-
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
